@@ -1,32 +1,34 @@
 from django.shortcuts import render
 from django.core.paginator import InvalidPage, Paginator
-
+from .forms import *
 import smtplib
 from django.core.mail import EmailMessage
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase 
 from email import encoders 
-
+import requests
+from django.contrib import messages
+from django.urls import reverse
+from django.shortcuts import render, redirect
 # Create your views here.
 def contact(request):
     contact_form = Contact(request.POST or None)
     response = requests.get('https://api.rootnet.in/covid19-in/contacts')
     data = response.json()
-    context={
-        'title':'contact',
-
-        'contact_form':contact_form,
-        'primary_number':data['data']['contacts']['primary']['number'],
-        'primary_tollfree'=data['data']['contacts']['primary']['number-tollfree'],
-        'email'=data['data']['contacts']['primary']['email'],
-        'twitter'=data['data']['contacts']['primary']['twitter'],
-        'facebook'=data['data']['contacts']['primary']['facebook'],
-        'media'=data['data']['contacts']['primary']['media'],
-        'data'=data['data']['contacts']['regional'],
+    context = {
+        "title" : "contact",
+        "contact_form": contact_form,
+        "primary_number":data['data']['contacts']['primary']['number'],
+        "primary_tollfree":data['data']['contacts']['primary']['number-tollfree'],
+        "email":data['data']['contacts']['primary']['email'],
+        "twitter":data['data']['contacts']['primary']['twitter'],
+        "facebook":data['data']['contacts']['primary']['facebook'],
+        "media":data['data']['contacts']['primary']['media'],
+        "data":data['data']['contacts']['regional'],
     }
-    
-
+    mail=data['data']['contacts']['primary']['email']
+    print(data['data']['contacts']['primary']['email'])
     if contact_form.is_valid():
 
         sender = contact_form.cleaned_data.get("sender")
@@ -43,17 +45,17 @@ def contact(request):
 
 
         msg = MIMEText(message)
+        
         msg['Subject'] = subject
-        msg['From'] = settings.EMAIL_HOST_USER
-        msg['To'] = settings.EMAIL_HOST_USER
+        msg['From'] = 'contact.getskills@gmail.com'
+        msg['To'] = mail
 
         # Create server object with SSL option
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
         # Perform operations via server
-        server.login('contact.getskills@gmail.com', 'getskills1.0')
-
-        server.sendmail(settings.EMAIL_HOST_USER, [settings.EMAIL_HOST_USER], msg.as_string())
+        server.login('piyushkumar0810@gmail.com', 'vikasgarg')
+        server.sendmail('contact.getskills@gmail.com', [data['data']['contacts']['primary']['email']], msg.as_string())
         server.quit()
 
         return redirect(reverse('contact'))
@@ -81,3 +83,7 @@ def notification(request):
     }
 
     return render(request, 'notifications.html', context)
+
+
+def hospital(request):
+    print("hello")
