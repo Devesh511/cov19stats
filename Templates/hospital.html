@@ -1,0 +1,63 @@
+<!-- {% extends 'base.html' %} -->
+<!-- {% load crispy_forms_tags %} -->
+{% load static %}
+
+{% block content %}
+        <div class="container">
+            <!-- <h3 class="text-right my-5">Contact Information </h3> -->
+            <style>
+                table {
+                font-family: arial, sans-serif;
+                border-collapse: collapse;
+                width: 100%;
+                float:right;
+                }
+                
+                td, th {
+                border: 1px solid #dddddd;
+                text-align: center;
+                padding: 8px;
+                }
+                
+                tr:nth-child(even) {
+                background-color: #dddddd;
+                }
+            </style>
+            <table >
+                <thead class="thead-inverse">
+                    <tr>
+                        <th>State</th>
+                        <th>Rural Hospitals</th>
+                        <th>Rural Beds</th>
+                        <th>Urban Hospitals</th>
+                        <th>Urban Beds</th>
+                        <th>Total Hospital</th>
+                        <th>Total Beds</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for data in datas %}
+                    <tr>
+                        <td>{{ data.state }}</td>
+                        <td>{{ data.ruralHospitals  }}</td>
+                        <td>{{ data.ruralBeds }}</td>
+                        <td>{{ data.urbanHospitals }}</td>
+                        <td>{{ data.urbanBeds }}</td>
+                        <td>{{ data.totalHospitals }}</td>
+                        <td>{{ data.totalBeds }}</td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <td>Total Summary</td>
+                        <td>{{ su.ruralHospitals  }}</td>
+                        <td>{{ su.ruralBeds }}</td>
+                        <td>{{ su.urbanHospitals }}</td>
+                        <td>{{ su.urbanBeds }}</td>
+                        <td>{{ su.totalHospitals }}</td>
+                        <td>{{ su.totalBeds }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+{% endblock %}

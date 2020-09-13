@@ -89,19 +89,6 @@ def notification(request):
         current_page = paginator.page(page)
     except InvalidPage as e:
         raise Http404(str(e))
-    # Current_page=[]
-    # mydict={}
-    # for i in current_page:
-    #     if (i['title'][:2].isdigit and i['title'][2]=='.'):
-    #         if (i['title'][3:5].isdigit() and i['title'][5]=='.'):
-    #             if(i['title'][6:10].isdigit()):
-    #                 mydict['date']=datetime.strptime(i['title'][:10], "%d.%m.%Y")
-    #                 mydict['title']=i['title'][11:]
-    #     else :
-    #         mydict['title']=i['title']
-    #         mydict['date']=""
-    #     mydict['link']=i['link']
-    #     Current_page.append(mydict)
     context={
         'current_page':current_page,
         'is_paginated': is_paginated,
@@ -112,4 +99,19 @@ def notification(request):
 
 
 def hospital(request):
-    print("hello")
+    response = requests.get('https://api.rootnet.in/covid19-in/hospitals/beds')
+    data = response.json()
+    context={
+        'su':data['data']['summary'],
+        'datas':data['data']['regional'],
+    }
+    return render(request,'hospital.html',context)
+
+
+def details(request):
+    response = requests.get('https://api.rootnet.in/covid19-in/hospitals/medical-colleges')
+    data = response.json()
+    context={
+        "datas":data["data"]["medicalColleges"],
+    }
+    return render(request,"medicalCollege.html",context)

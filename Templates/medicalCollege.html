@@ -1,0 +1,62 @@
+<!-- {% extends 'base.html' %} -->
+<!-- {% load crispy_forms_tags %} -->
+{% load static %}
+
+{% block content %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+        <div class="container">
+            <!-- <h3 class="text-right my-5">Contact Information </h3> -->
+            <!-- <style>
+                table {
+                font-family: arial, sans-serif;
+                border-collapse: collapse;
+                width: 100%;
+                float:right;
+                }
+                
+                td, th {
+                border: 1px solid #dddddd;
+                text-align: center;
+                padding: 8px;
+                }
+                
+                tr:nth-child(even) {
+                background-color: #dddddd;
+                }
+            </style> -->
+            <table id="12345" class="display" >
+                <thead class="thead-inverse">
+                    <tr>
+                        <th>State Name</th>
+                        <th>Institute Name</th>
+                        <th>City</th>
+                        <th>Type</th>
+                        <th>Admission Capacity</th>
+                        <th>HospitalBeds</th>
+                        <!-- <th>Total Beds</th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                {% for data in datas %}
+                    <tr>
+                        <td>{{ data.state }}</td>
+                        <td>{{ data.name  }}</td>
+                        <td>{{ data.city }}</td>
+                        <td>{{ data.ownership }}</td>
+                        <td>{{ data.admissionCapacity }}</td>
+                        <td>{{ data.hospitalBeds }}</td>
+                        <!-- <td>{{ data.totalBeds }}</td> -->
+                    </tr>
+                    {% endfor %}
+                    
+                </tbody>
+            </table>
+        </div>
+        <script>
+        $(document).ready( function () {
+            $('#12345').DataTable();
+        } );
+        </script>
+{% endblock %}
