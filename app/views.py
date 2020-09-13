@@ -11,6 +11,7 @@ import requests
 from django.contrib import messages
 from django.urls import reverse
 from django.shortcuts import render, redirect
+from datetime import datetime
 # Create your views here.
 def contact(request):
     contact_form = Contact(request.POST or None)
@@ -65,21 +66,46 @@ def contact(request):
     return render(request,'contact.html',context)
 
 def notification(request):
-    response=request.get('https://api.rootnet.in/covid19-in/notifications')
+    response=requests.get('https://api.rootnet.in/covid19-in/notifications')
     data=response.json()
     notifications=data['data']['notifications']
-    paginator = Paginator(notifications, 10, orphans=2)
+    page=[]
+    for i in notifications:
+        mydict={}
+        if (i['title'][:2].isdigit and i['title'][2]=='.'):
+            if (i['title'][3:5].isdigit() and i['title'][5]=='.'):
+                if(i['title'][6:10].isdigit()):
+                    mydict['date']=datetime.strptime(i['title'][:10], "%d.%m.%Y")
+                    mydict['title']=i['title'][11:]
+        else :
+            mydict['title']=i['title']
+            mydict['date']=""
+        mydict['link']=i['link']
+        page.append(mydict)
+    paginator = Paginator(page, 10, orphans=2)
     is_paginated = True if paginator.num_pages > 1 else False
-    # page = request.GET.get('page') or 1
-    # try:
-    #     current_page = paginator.page(page)
-    # except InvalidPage as e:
-    #     raise Http404(str(e))
-    
+    page = request.GET.get('page') or 1
+    try:
+        current_page = paginator.page(page)
+    except InvalidPage as e:
+        raise Http404(str(e))
+    # Current_page=[]
+    # mydict={}
+    # for i in current_page:
+    #     if (i['title'][:2].isdigit and i['title'][2]=='.'):
+    #         if (i['title'][3:5].isdigit() and i['title'][5]=='.'):
+    #             if(i['title'][6:10].isdigit()):
+    #                 mydict['date']=datetime.strptime(i['title'][:10], "%d.%m.%Y")
+    #                 mydict['title']=i['title'][11:]
+    #     else :
+    #         mydict['title']=i['title']
+    #         mydict['date']=""
+    #     mydict['link']=i['link']
+    #     Current_page.append(mydict)
     context={
-        'notifications':notifications,
+        'current_page':current_page,
         'is_paginated': is_paginated,
-        'paginater':paginator
+        # 'paginater':paginator
     }
 
     return render(request, 'notifications.html', context)

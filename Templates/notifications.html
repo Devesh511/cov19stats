@@ -1,0 +1,64 @@
+<!-- {% extends "base.html" %} -->
+
+{% block title %}All {{ block.super }}{% endblock title %}
+
+{% block content %}
+    <div class="container">
+        <h3 class="text-center my-5">Notification and Advisories </h3>
+        <style>
+            table {
+              font-family: arial, sans-serif;
+              border-collapse: collapse;
+              width: 100%;
+            }
+            
+            td, th {
+              border: 1px solid #dddddd;
+              text-align: left;
+              padding: 8px;
+            }
+            
+            tr:nth-child(even) {
+              background-color: #dddddd;
+            }
+        </style>
+        <table >
+            <thead class="thead-inverse">
+                <tr>
+                    <th>Date</th>
+                    <th>Title</th>
+                    <th>Link</th>
+                    <!-- <th>Gender</th> -->
+                    <!-- <th>Date of birth</th> -->
+                </tr>
+            </thead>
+            <tbody>
+               {% for notifications in  current_page %}
+                <tr>
+                    <td>{{ notifications.date|date:"d.m.Y" }}</td>
+                    <td>{{ notifications.title  }}</td>
+                    <td><a href="{{notifications.link}}">{{notifications.link}}</a></td>
+                    <!-- <td>{{ student.dob }}</td> -->
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% if is_paginated %}
+        <div>
+            <span>
+                {% if current_page.has_previous %}
+                    <a href="?page={{ current_page.previous_page_number }}">Previous</a>
+                {% endif %}
+
+                <span>
+                    Page {{ current_page.number }} of {{ current_page.paginator.num_pages }}.
+                </span>
+
+                {% if current_page.has_next %}
+                    <a href="?page={{ current_page.next_page_number }}">Next</a>
+                {% endif %}
+            </span>
+        </div>
+        {% endif %}
+    </div>
+{% endblock content %}
