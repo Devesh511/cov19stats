@@ -11,7 +11,7 @@ import requests
 from django.contrib import messages
 from django.urls import reverse
 from django.shortcuts import render, redirect
-from datetime import datetime
+from datetime import datetime,date,timedelta
 # Create your views here.
 def contact(request):
     contact_form = Contact(request.POST or None)
@@ -126,6 +126,13 @@ def deaths(request):
     # response=requests.get(url,headers={'X-DreamFactory-API-Key':'ec81c498321f3023267bb60cb08d4de1c649638a6c5eb6c6e0f2c5e41ac3d6fa'})
     # data=response.json()
     mydict={}
+    def daterange(start_date, end_date):
+        for n in range(int((end_date - start_date).days)):
+            yield start_date + timedelta(n)
+    start_date = date(2020, 1, 1)
+    end_date = date.today()
+    for single_date in daterange(start_date, end_date):
+        mydict[single_date.strftime("%d-%m-%Y")]=0        
     
     for i in data:
         if i['reportedOn'] in mydict.keys():
@@ -155,7 +162,10 @@ def deaths(request):
         gender=death_form.cleaned_data.get("gender")
         start_date=death_form.cleaned_data.get("start_date")
         end_date=death_form.cleaned_data.get("end_date")
+        
         dict1={}
+        for single_date in daterange(start_date, end_date):
+            dict1[single_date.strftime("%d-%m-%Y")]=0
         for i in data:
             if i['state']=='India' or i['state']==state:
                 if int(age_range[:2])<int(i['ageEstimate']) and int(age_range[-2:])>int(i['ageEstimate']):     
@@ -175,8 +185,8 @@ def deaths(request):
         for key,value in dict1.items():
             temp=[key,value]
             lst1.append(temp)
-        print('lst1')
-        print(lst1)
+        # print('lst1')
+        # print(lst1)
         # print(age_range)
         # print(gender)
         # print(start_date)

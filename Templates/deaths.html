@@ -57,7 +57,7 @@
           var data = google.visualization.arrayToDataTable(a);
   
           var options = {
-            title: 'Company Performance',
+            title: 'Deaths Per Day',
             legend: { position: 'bottom' }
           };
   
@@ -70,13 +70,28 @@
             });
 
           chart.draw(data, options);
-          document.getElementById('png').outerHTML = '<a href="' + chart.getImageURI() + '">Printable version</a>';
-
+          document.getElementById('png').outerHTML = '<a href=" ' + chart.getImageURI() + ' " download><button class="btn"><i class="fa fa-download"></i> Download</button></a>';
+            
         }
       </script>
     </head>
+    <style>
+        .btn {
+          background-color: DodgerBlue;
+          border: none;
+          color: white;
+          padding: 12px 30px;
+          cursor: pointer;
+          font-size: 20px;
+        }
+        
+        /* Darker background on mouse-over */
+        .btn:hover {
+          background-color: RoyalBlue;
+        }
+    </style>
     <body>
-      <div id="curve_chart" style="width: 900px; height: 500px"></div>
+      <div id="curve_chart" style="width: 1500px; height: 500px"></div>
       <div id='png'></div>
 
     </body>
