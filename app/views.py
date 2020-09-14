@@ -120,27 +120,79 @@ def details(request):
 def deaths(request):
     death_form=Death(request.POST or None)
     print('reached')
+    response = requests.get('https://covsteezy.000webhostapp.com/te.php')
+    data=response.json()
     # url='https://iitjodhpur.apps.dreamfactory.com/api/v2/cov19/_table/table%202'
     # response=requests.get(url,headers={'X-DreamFactory-API-Key':'ec81c498321f3023267bb60cb08d4de1c649638a6c5eb6c6e0f2c5e41ac3d6fa'})
     # data=response.json()
+    mydict={}
+    
+    for i in data:
+        if i['reportedOn'] in mydict.keys():
+            if i['status'] == "Deceased":
+                mydict[i['reportedOn']]+=1
+        else :
+            if i['status']== "Deceased":
+                mydict[i['reportedOn']]=1
+            else:
+                mydict[i['reportedOn']]=0
+    lst=[]
+    temp=["date","value"]
+    lst.append(temp)
+    for key,value in mydict.items():
+        temp=[key,value]
+        lst.append(temp)
+    # print(lst)
+    context={  
+        "data":lst,
+        "death_form":death_form,
+        
+    }
+
     if death_form.is_valid():
         state=death_form.cleaned_data.get("state")
         age_range=death_form.cleaned_data.get("age_range")
         gender=death_form.cleaned_data.get("gender")
         start_date=death_form.cleaned_data.get("start_date")
         end_date=death_form.cleaned_data.get("end_date")
+        dict1={}
+        for i in data:
+            if i['state']=='India' or i['state']==state:
+                if int(age_range[:2])<int(i['ageEstimate']) and int(age_range[-2:])>int(i['ageEstimate']):     
+                    if datetime.strptime(i['reportedOn'],"%d-%m-%Y").date()>=start_date and datetime.strptime(i['reportedOn'],"%d-%m-%Y").date()<=end_date:
+                        if i['gender']=="na" or i['gender']==gender:
+                            if i['reportedOn'] in dict1.keys():
+                                if i['status'] == "Deceased":
+                                    dict1[i['reportedOn']]+=1
+                            else :
+                                if i['status']== "Deceased":
+                                    dict1[i['reportedOn']]=1
+                                else:
+                                    dict1[i['reportedOn']]=0
+        lst1=[]
+        temp=["date","value"]
+        lst1.append(temp)  
+        for key,value in dict1.items():
+            temp=[key,value]
+            lst1.append(temp)
+        print('lst1')
+        print(lst1)
+        # print(age_range)
+        # print(gender)
+        # print(start_date)
+        # print(end_date)
+        context1={  
+            "data":lst1,
+            "death_form":death_form,
+
+        }
         
-        print(state)
-        print(age_range)
-        print(gender)
-        print(start_date)
-        print(end_date)
         # lst=[]
         # for i in data:
         #     p=True
         #     if(state!='India' and state!=i['state']):
         #         p=False
         #     if()
-        # return redirect(reverse('deaths'))
-    return render(request,'deaths.html',{'death_form':death_form})
+        return render(request,'deaths.html',context1)
+    return render(request,'deaths.html',context)
     # print(data)
