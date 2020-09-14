@@ -51,7 +51,7 @@ def contact(request):
         msg['From'] = 'contact.getskills@gmail.com'
         msg['To'] = mail
 
-        # Create server object with SSL option
+        # Create server object with SSL option  
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
         # Perform operations via server
@@ -101,10 +101,11 @@ def notification(request):
 def hospital(request):
     response = requests.get('https://api.rootnet.in/covid19-in/hospitals/beds')
     data = response.json()
+    # print(data)    
     context={
         'su':data['data']['summary'],
         'datas':data['data']['regional'],
-    }
+    } 
     return render(request,'hospital.html',context)
 
 
@@ -115,3 +116,31 @@ def details(request):
         "datas":data["data"]["medicalColleges"],
     }
     return render(request,"medicalCollege.html",context)
+
+def deaths(request):
+    death_form=Death(request.POST or None)
+    print('reached')
+    # url='https://iitjodhpur.apps.dreamfactory.com/api/v2/cov19/_table/table%202'
+    # response=requests.get(url,headers={'X-DreamFactory-API-Key':'ec81c498321f3023267bb60cb08d4de1c649638a6c5eb6c6e0f2c5e41ac3d6fa'})
+    # data=response.json()
+    if death_form.is_valid():
+        state=death_form.cleaned_data.get("state")
+        age_range=death_form.cleaned_data.get("age_range")
+        gender=death_form.cleaned_data.get("gender")
+        start_date=death_form.cleaned_data.get("start_date")
+        end_date=death_form.cleaned_data.get("end_date")
+        
+        print(state)
+        print(age_range)
+        print(gender)
+        print(start_date)
+        print(end_date)
+        # lst=[]
+        # for i in data:
+        #     p=True
+        #     if(state!='India' and state!=i['state']):
+        #         p=False
+        #     if()
+        # return redirect(reverse('deaths'))
+    return render(request,'deaths.html',{'death_form':death_form})
+    # print(data)

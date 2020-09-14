@@ -10,5 +10,5 @@ urlpatterns = [
     url(r'^hospital/$', views.hospital, name='hospital'),
     url(r'^hospital/details/$', views.details, name='details'),
    # url(r'^admin/', views.admin, name='admin'),
-  #  url(r'^edit/', views.update_user, name='update_user'),
+    url(r'^deaths/', views.deaths, name='deaths'),
 ]
