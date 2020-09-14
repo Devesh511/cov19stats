@@ -11,4 +11,5 @@ urlpatterns = [
     url(r'^hospital/details/$', views.details, name='details'),
    # url(r'^admin/', views.admin, name='admin'),
     url(r'^deaths/', views.deaths, name='deaths'),
+      url(r'^$', views.home, name='home'),
 ]

@@ -13,6 +13,9 @@ from django.urls import reverse
 from django.shortcuts import render, redirect
 from datetime import datetime,date,timedelta
 # Create your views here.
+def home(request):
+    return render(request,'home.html')
+
 def contact(request):
     contact_form = Contact(request.POST or None)
     response = requests.get('https://api.rootnet.in/covid19-in/contacts')
